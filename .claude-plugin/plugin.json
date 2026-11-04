@@ -1,0 +1,11 @@
+{
+  "name": "chatmaxima",
+  "displayName": "ChatMaxima",
+  "version": "1.0.0",
+  "description": "Build, test and fix ChatMaxima chatbots and AI agents, write WhatsApp templates and Flows, and triage your WhatsApp, Instagram, Messenger, email and website chat inbox from a conversation.",
+  "author": { "name": "ChatMaxima", "url": "https://chatmaxima.com/" },
+  "homepage": "https://docs.chatmaxima.com/mcp",
+  "repository": "https://github.com/chatmaxima-com/chatmaxima-skills",
+  "license": "MIT",
+  "keywords": ["chatmaxima", "whatsapp", "chatbot", "ai-agent", "instagram", "inbox", "customer-support"]
+}

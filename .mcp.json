@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "chatmaxima": {
+      "type": "http",
+      "url": "https://chatmaxima.com/mcp"
+    }
+  }
+}
