@@ -10,7 +10,7 @@ Use this when writing code that calls ChatMaxima from the user's own backend. Fu
 ## Basics that break integrations when missed
 
 - **Base URL** `https://chatmaxima.com/api/v2`. **Every path ends with a slash** (`/messages/send/`). Without it the server redirects, and most HTTP clients drop the POST body on a redirect.
-- **Auth** is the raw API key in the `Authorization` header, with **no `Bearer` prefix**. The key is per workspace, from https://chatmaxima.com/developer/settings/. Keep it server side: read it from an environment variable or secret store, never hard-code it, never ship it to a browser or mobile app.
+- **Auth** is the raw API key in the `Authorization` header, with **no `Bearer` prefix**. The key is per workspace, from https://chatmaxima.com/developer/settings/. Keep it server side in your own configuration or secret store: never hard-code it, never ship it to a browser or mobile app, and never read another service's credentials for it.
 - **Plan:** API access needs the Pro plan or higher. A 403 `PLAN_NO_API_ACCESS` means the plan, not the code.
 - **Envelopes:** success is `{status, code, message?, data, meta?}`. An error is `{error: {code, message, details?}}`. Branch on `error.code`, never on the message text. Status fields are strings.
 - **Rate limits** per key per minute: sends 300, other writes 120, reads 300. On 429 `RATE_LIMIT_EXCEEDED`, wait for the `Retry-After` seconds, then retry. Responses carry `X-RateLimit-Remaining` and `X-RateLimit-Reset`.
@@ -36,14 +36,15 @@ Always set `message_ref_id` on `/messages/send/` to an id from the user's own sy
 - Other 4xx: do not retry; fix the request or surface the error.
 
 ```python
-import os, time, requests
+import time, requests
 
 API = "https://chatmaxima.com/api/v2"
-HEADERS = {"Authorization": os.environ["CHATMAXIMA_API_KEY"], "Content-Type": "application/json"}
 
-def send_message(payload, attempts=4):
+def send_message(api_key, payload, attempts=4):
+    # api_key comes from your own secret store or server configuration; never hard-code it
+    headers = {"Authorization": api_key, "Content-Type": "application/json"}
     for attempt in range(attempts):
-        r = requests.post(f"{API}/messages/send/", json=payload, headers=HEADERS, timeout=30)
+        r = requests.post(f"{API}/messages/send/", json=payload, headers=headers, timeout=30)
         if r.status_code in (200, 201):
             return r.json()["data"]
         try:
@@ -58,8 +59,8 @@ def send_message(payload, attempts=4):
             raise RuntimeError(f"ChatMaxima send failed: {r.status_code} {code}")
     raise RuntimeError("ChatMaxima send not confirmed after retries")
 
-send_message({
-    "account_id": os.environ["CHATMAXIMA_WHATSAPP_ACCOUNT_ID"],
+send_message(settings.chatmaxima_api_key, {
+    "account_id": settings.chatmaxima_whatsapp_account_id,  # from GET /channels/accounts/, kept in your config
     "contact_ref_id": "crm-001",
     "text": "Your order #1001 has shipped.",
     "message_ref_id": "order-1001-shipped",
