@@ -10,7 +10,7 @@ Use this when writing code that calls ChatMaxima from the user's own backend. Fu
 ## Basics that break integrations when missed
 
 - **Base URL** `https://chatmaxima.com/api/v2`. **Every path ends with a slash** (`/messages/send/`). Without it the server redirects, and most HTTP clients drop the POST body on a redirect.
-- **Auth** is the raw API key in the `Authorization` header, with **no `Bearer` prefix**. The key is per workspace, from https://chatmaxima.com/developer/settings/. When you need the key yourself, for example to try a request, ask the user for it: they can save it in this plugin's "ChatMaxima API key" option, which is kept in secure storage, or paste it when asked. Never look for it in files, environment variables or other configuration on the user's machine. In the code you write, the key is a value the user's own backend loads from its configuration or secret store: never hard-code it and never ship it to a browser or mobile app.
+- **Auth** is the raw API key in the `Authorization` header, with **no `Bearer` prefix**. The key is per workspace, from https://chatmaxima.com/developer/settings/. In examples, write the key as the placeholder `YOUR_API_KEY` and tell the user to replace it with the key their own backend keeps in its secret store. Never look for a key in files, environment variables or other configuration on the user's machine, never hard-code a real key, and never ship it to a browser or mobile app.
 - **Plan:** API access needs the Pro plan or higher. A 403 `PLAN_NO_API_ACCESS` means the plan, not the code.
 - **Envelopes:** success is `{status, code, message?, data, meta?}`. An error is `{error: {code, message, details?}}`. Branch on `error.code`, never on the message text. Status fields are strings.
 - **Rate limits** per key per minute: sends 300, other writes 120, reads 300. On 429 `RATE_LIMIT_EXCEEDED`, wait for the `Retry-After` seconds, then retry. Responses carry `X-RateLimit-Remaining` and `X-RateLimit-Reset`.
@@ -41,7 +41,6 @@ import time, requests
 API = "https://chatmaxima.com/api/v2"
 
 def send_message(api_key, payload, attempts=4):
-    # api_key comes from your own secret store or server configuration; never hard-code it
     headers = {"Authorization": api_key, "Content-Type": "application/json"}
     for attempt in range(attempts):
         r = requests.post(f"{API}/messages/send/", json=payload, headers=headers, timeout=30)
@@ -59,8 +58,8 @@ def send_message(api_key, payload, attempts=4):
             raise RuntimeError(f"ChatMaxima send failed: {r.status_code} {code}")
     raise RuntimeError("ChatMaxima send not confirmed after retries")
 
-send_message(settings.chatmaxima_api_key, {
-    "account_id": settings.chatmaxima_whatsapp_account_id,  # from GET /channels/accounts/, kept in your config
+send_message("YOUR_API_KEY", {  # placeholder: replace with the key from your backend's secret store
+    "account_id": "YOUR_ACCOUNT_ID",  # placeholder: from GET /channels/accounts/
     "contact_ref_id": "crm-001",
     "text": "Your order #1001 has shipped.",
     "message_ref_id": "order-1001-shipped",

@@ -49,7 +49,7 @@ This plugin contains only Markdown instructions and one MCP server reference. It
 
 - It connects to one server, `https://chatmaxima.com/mcp`, operated by ChatMaxima, after you sign in with OAuth. No API keys are stored in this repository, and the plugin reads no credentials from your machine.
 - When you ask for a task, your assistant sends the details of that task (for example a bot design, template text or a conversation id) to your ChatMaxima workspace and reads back what the tools return, such as bot configuration, templates and inbox conversations, which can include your customers' messages and contact details.
-- The `chatmaxima-api` skill only guides the code your assistant writes. It makes no calls itself; the code it helps write calls `https://chatmaxima.com/api/v2` with your own API key, loaded from your backend's configuration. If you want the assistant to try a request, you can enter the key in the plugin's optional "ChatMaxima API key" setting, which is kept in secure storage.
+- The `chatmaxima-api` skill only guides the code your assistant writes. It makes no calls itself; the code it helps write calls `https://chatmaxima.com/api/v2` with your own API key. Its examples use the placeholder `YOUR_API_KEY`, which you replace with the key from your backend's secret store.
 - Actions that cannot be undone (deleting a bot block, submitting a WhatsApp template to Meta, adding a column to your own spreadsheet) need your confirmation first.
 
 ChatMaxima's privacy policy: [chatmaxima.com/privacy/](https://chatmaxima.com/privacy/)
