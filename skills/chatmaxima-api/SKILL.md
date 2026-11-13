@@ -40,8 +40,8 @@ import time, requests
 
 API = "https://chatmaxima.com/api/v2"
 
-def send_message(api_key, payload, attempts=4):
-    headers = {"Authorization": api_key, "Content-Type": "application/json"}
+def send_message(payload, attempts=4):
+    headers = {"Authorization": "YOUR_API_KEY", "Content-Type": "application/json"}  # placeholder: replace with your workspace API key
     for attempt in range(attempts):
         r = requests.post(f"{API}/messages/send/", json=payload, headers=headers, timeout=30)
         if r.status_code in (200, 201):
@@ -58,7 +58,7 @@ def send_message(api_key, payload, attempts=4):
             raise RuntimeError(f"ChatMaxima send failed: {r.status_code} {code}")
     raise RuntimeError("ChatMaxima send not confirmed after retries")
 
-send_message("YOUR_API_KEY", {  # placeholder: replace with the key from your backend's secret store
+send_message({
     "account_id": "YOUR_ACCOUNT_ID",  # placeholder: from GET /channels/accounts/
     "contact_ref_id": "crm-001",
     "text": "Your order #1001 has shipped.",
