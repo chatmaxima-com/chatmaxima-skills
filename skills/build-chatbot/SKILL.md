@@ -43,7 +43,7 @@ Then describe the flow back in a short numbered list and get a yes before buildi
 
 ## 4. Test before handing over
 
-1. Call `run_test` with a short scripted conversation. The first message must match the trigger. Email and SMS are simulated.
+1. Call `run_test` with a short scripted conversation. The first message must match the trigger. Only ChatMaxima's own logic runs (messages, questions, conditions, variables, AI replies); every integration, API, webhook, code, MCP server, email, SMS, WhatsApp and payment block is simulated and named in the transcript, and an AI block gets no tools during a test.
 2. Read the transcript. If a step is wrong, fix it with `get_block` then `update_block` (send only the changed fields), and test again.
 3. A WhatsApp Flow form cannot be opened in the test chat. Say so, and tell the user to test that part on WhatsApp itself.
 4. Share the transcript summary and the builder link. Tell the user which channel the bot still needs to be connected to, if any.

@@ -1,7 +1,7 @@
 {
   "name": "chatmaxima",
   "displayName": "ChatMaxima",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Build, test and fix ChatMaxima chatbots and AI agents, write WhatsApp templates and Flows, and triage your WhatsApp, Instagram, Messenger, email and website chat inbox from a conversation.",
   "author": {
     "name": "ChatMaxima",
@@ -19,5 +19,14 @@
     "instagram",
     "inbox",
     "customer-support"
-  ]
+  ],
+  "userConfig": {
+    "chatmaxima_api_key": {
+      "type": "string",
+      "title": "ChatMaxima API key",
+      "description": "Optional. Your workspace API key from https://chatmaxima.com/developer/settings/, for the chatmaxima-api skill when you ask it to call the ChatMaxima REST API. Not needed for the ChatMaxima tools, which sign in with OAuth.",
+      "sensitive": true,
+      "required": false
+    }
+  }
 }
